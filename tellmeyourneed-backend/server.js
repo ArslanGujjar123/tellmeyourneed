@@ -14,8 +14,10 @@ dotenv.config();
 const authRoutes = require('./Auth/auth');
 const apiRoutes = require('./routes/api');
 
-const Need  = require('./Models/Need')
-
+// const Need = require('./Models/Need')
+// const User = require('./Models/User')
+// const Report = require('./Models/Report')
+// const Message = require('./Models/Message')
 // App Setup
 const app = express();
 const server = http.createServer(app);
@@ -56,24 +58,63 @@ app.get("/health", (_, res) => res.send("OK"));
 app.get("/", (req, res) => {
   res.send("Server running & API working ✅");
 });
-// const deleteNeedById = async () => {
-//     try {
-//         const deletedNeed = await Need.deleteMany({});
-//         if (!deletedNeed) {
-//             return { success: false, message: "Need not found" };
-//         }
-//         return { success: true, message: "Need deleted successfully" };
-//     } catch (error) {
-//         console.error("Error deleting need:", error);
-//         return { success: false, message: "Error deleting need" };
+// const deleteNeeds = async () => {
+//   try {
+//     const deletedNeed = await Need.deleteMany({});
+//     if (!deletedNeed) {
+//       return { success: false, message: "Need not found" };
 //     }
+//     return { success: true, message: "Need deleted successfully" };
+//   } catch (error) {
+//     console.error("Error deleting need:", error);
+//     return { success: false, message: "Error deleting need" };
+//   }
 // };
 
-// // Example usage
-// const id = "6820b46d12222bbd1324e229";
-// deleteNeedById().then(response => console.log(response));
+// deleteNeeds().then(response => console.log(response));
+// const deleteUsers = async () => {
+//   try {
+//     const deletedUser = await User.deleteMany({});
+//     if (!deletedUser) {
+//       return { success: false, message: "User not found" };
+//     }
+//     return { success: true, message: "User deleted successfully" };
+//   } catch (error) {
+//     console.error("Error deleting user:", error);
+//     return { success: false, message: "Error deleting user" };
+//   }
+// };
 
+// deleteUsers().then(response => console.log(response));
 
+// const deleteReports = async () => {
+//   try {
+//     const deletedReport = await Report.deleteMany({});
+//     if (!deletedReport) {
+//       return { success: false, message: "Report not found" };
+//     }
+//     return { success: true, message: "Reports deleted successfully" };
+//   } catch (error) {
+//     console.error("Error deleting reports:", error);
+//     return { success: false, message: "Error deleting reports" };
+//   }
+// };
+
+// deleteReports().then(response => console.log(response));
+// const deleteMessages = async () => {
+//   try {
+//     const deletedMessage = await Message.deleteMany({});
+//     if (!deletedMessage) {
+//       return { success: false, message: "Message not found" };
+//     }
+//     return { success: true, message: "Messages deleted successfully" };
+//   } catch (error) {
+//     console.error("Error deleting messages:", error);
+//     return { success: false, message: "Error deleting messages" };
+//   }
+// };
+
+// deleteMessages().then(response => console.log(response));
 // Start Server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {

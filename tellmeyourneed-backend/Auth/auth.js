@@ -7,65 +7,31 @@ const router = express.Router();
 const key = process.env.SECRET_KEY;
 
 // Register Route
-// router.post('/register', async (req, res) => {
-//     try {
-//     const { username, password, token } = req.body;
-
-//     if (!token) {
-//             return res.status(400).json({ success: false, message: "Token is required" });
-//         }
-
-//         const decoded = jwt.verify(token, key);
-//         const email = decoded.email; // FIXED: Ensure email is extracted from decoded token
-
-//         // Validate email domain
-//         if (!email.endsWith("@umt.edu.pk")) {
-//             return res.status(403).json({ success: false, message: "Invalid email domain" });
-//         }
-
-//         // Check if username is already taken
-//         const existingUser = await User.findOne({ username });
-//         if (existingUser) {
-//             return res.status(400).json({ success: false, message: "Username already taken" });
-//         }
-//         const newUser = new User({
-//             username,
-//             email,
-//             password
-//         });
-
-//         // Hash password before saving in database
-//         const salt = await bcrypt.genSalt(10);
-//         newUser.password = await bcrypt.hash(password, salt);
-
-//         // Save the new user to the database
-//         const savedUser = await newUser.save();
-
-//         // Create JWT Payload
-//         const payload = {
-//             id: savedUser._id,
-//             name:username,
-//             role: 'user',
-//         };
-
-//         const token1 = jwt.sign(payload, key, { expiresIn: '4h' }); 
-//         return res.json({
-//             success: true,
-//             token: 'Bearer ' + token1,
-//             userId: savedUser._id
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         return res.status(500).json({ success: false, message: 'Server error' });
-//     }
-// });
-
-
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, password, token } = req.body;
+    let email;
+    if (!token) {
+      return res.status(400).json({ success: false, message: "Token is required" });
+    }
 
+    try {
+      const decoded = jwt.verify(token, key);
+      email = decoded.email;
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        return res.status(401).json({ success: false, message: "Token has expired" });
+      } else if (error.name === "JsonWebTokenError") {
+        return res.status(401).json({ success: false, message: "Invalid or malformed token" });
+      } else {
+        return res.status(500).json({ success: false, message: "Token verification failed", error: error.message });
+      }
+    }
 
+    // Validate email domain
+    if (!email.endsWith("@umt.edu.pk")) {
+      return res.status(403).json({ success: false, message: "Please use your UMT email to register" });
+    }
 
     // Check if username is already taken
     const existingUser = await User.findOne({ username });
@@ -87,22 +53,64 @@ router.post('/register', async (req, res) => {
 
     // Create JWT Payload
     const payload = {
-      id: savedUser._id,
       name: username,
-      role: 'user',
+      role: newUser.role,
     };
 
     const token1 = jwt.sign(payload, key, { expiresIn: '4h' });
     return res.json({
       success: true,
       token: 'Bearer ' + token1,
-      userId: savedUser._id
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
+
+// router.post('/register', async (req, res) => {
+//   try {
+//     const { username, email, password } = req.body;
+
+
+
+//     // Check if username is already taken
+//     const existingUser = await User.findOne({ username });
+//     if (existingUser) {
+//       return res.status(400).json({ success: false, message: "Username already taken" });
+//     }
+//     const newUser = new User({
+//       username,
+//       email,
+//       password
+//     });
+
+//     // Hash password before saving in database
+//     const salt = await bcrypt.genSalt(10);
+//     newUser.password = await bcrypt.hash(password, salt);
+
+//     // Save the new user to the database
+//     const savedUser = await newUser.save();
+
+//     // Create JWT Payload
+//     const payload = {
+//       id: savedUser._id,
+//       name: username,
+//       role: 'user',
+//     };
+
+//     const token1 = jwt.sign(payload, key, { expiresIn: '4h' });
+//     return res.json({
+//       success: true,
+//       token: 'Bearer ' + token1,
+//       userId: savedUser._id
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ success: false, message: 'Server error' });
+//   }
+// });
 
 
 
@@ -121,7 +129,6 @@ router.post('/login', (req, res) => {
         if (isMatch) {
 
           const payload = {
-            id: user._id,
             name: username,
             role: user.role,
           };
@@ -135,7 +142,6 @@ router.post('/login', (req, res) => {
               res.json({
                 success: true,
                 token: 'Bearer ' + token,
-                userId: user._id
               });
             }
           );

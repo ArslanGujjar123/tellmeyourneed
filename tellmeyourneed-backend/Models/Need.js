@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const needSchema = new mongoose.Schema({
-  
+
   user: {
     username: {
       type: String,
@@ -28,10 +28,10 @@ const needSchema = new mongoose.Schema({
       'Notes',
       'Assignment',
       'Study',
-      'other'
+      'Other'
     ]
   },
-  
+
   status: {
     type: String,
     enum: ['open', 'assigned', 'closed'],
@@ -52,8 +52,8 @@ const needSchema = new mongoose.Schema({
   imageUrls: [{
     type: String,
     validate: {
-      validator: function(url) {
-        
+      validator: function (url) {
+
         return /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i.test(url);
       },
       message: props => `${props.value} is not a valid image URL!`
