@@ -33,6 +33,10 @@ router.post('/register', async (req, res) => {
       return res.status(403).json({ success: false, message: "Please use your UMT email to register" });
     }
 
+    const alreadyRegistered = await User.findOne({ email });
+    if (alreadyRegistered) {
+      return res.status(400).json({ success: false, message: "You are already registered" });
+    }
     // Check if username is already taken
     const existingUser = await User.findOne({ username });
     if (existingUser) {

@@ -17,7 +17,7 @@ router.put('/need/:id/status', protectRoute(['user']), needController.changeNeed
 // User routes
 router.get('/profile/:name', protectRoute(['user']), userController.getUserProfile);
 router.put('/profile', protectRoute(['user']), userController.updateUserProfile);
-router.get('/users', userController.getAllUsers);
+router.get('/users', protectRoute(['user']), userController.getAllUsers);
 router.get('/user/:id', protectRoute(['user']), userController.getUser);
 router.delete('/user/:id', protectRoute(['user']), userController.deleteUser);
 router.put('/users/:id/:blockStatus', protectRoute(['user']), userController.blockorUnBlockUser);
