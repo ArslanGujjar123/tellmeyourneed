@@ -41,7 +41,7 @@ exports.updateUserProfile = async (req, res) => {
 };
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = User.find();
+        const users = await User.find().lean();
         if (!users) {
             return res.status(404).json({ message: "No User found" });
         }

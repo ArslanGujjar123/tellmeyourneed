@@ -1,5 +1,6 @@
 const passport = require('passport');
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const User = require("../Models/User");
 const jwt = require("jsonwebtoken");
 const dotenv = require('dotenv');
 dotenv.config();
@@ -44,7 +45,7 @@ const googleAuth = (app) => {
     });
 
     app.get("/unauthorized", (req, res) => {
-        res.redirect("https://tellmeyourneed.vercel.app/login");
+        res.redirect("https://tellmeyourneed.vercel.app/login?message=Please%20register%20with%20UMT%20Email");
     });
 };
 
