@@ -13,7 +13,7 @@ const googleAuth = require('./Auth/googleAuth');
 dotenv.config();
 const authRoutes = require('./Auth/auth');
 const apiRoutes = require('./routes/api');
-
+const adminRoutes = require('./routes/adminApis');
 // const Need = require('./Models/Need')
 // const User = require('./Models/User')
 // const Report = require('./Models/Report')
@@ -52,6 +52,9 @@ googleAuth(app);
 // Use routes
 app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
+app.use('/F2022065', adminRoutes);
+
+
 // Health check to avoid Railway idle shutdown
 app.get("/health", (_, res) => res.send("OK"));
 
